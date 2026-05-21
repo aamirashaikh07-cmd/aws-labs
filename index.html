@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AWS Foundation Labs — Student Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #FF6B2B;
+    --orange-light: #FFF0E8;
+    --orange-mid: #FFD4BC;
+    --navy: #0F1B2D;
+    --navy-mid: #1E2F45;
+    --navy-light: #2A3F5A;
+    --text: #1A1A2E;
+    --text-muted: #5A6478;
+    --text-light: #8A95A8;
+    --bg: #F8F7F4;
+    --card-bg: #FFFFFF;
+    --border: #E8E4DC;
+    --border-strong: #D0C9BE;
+    --green: #1D9E75;
+    --green-light: #E1F5EE;
+    --amber: #BA7517;
+    --amber-light: #FAEEDA;
+    --purple: #534AB7;
+    --purple-light: #EEEDFE;
+    --blue: #185FA5;
+    --blue-light: #E6F1FB;
+    --red: #993C1D;
+    --red-light: #FAECE7;
+    --pink: #993556;
+    --pink-light: #FBEAF0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  .site-header {
+    background: var(--navy);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 2px solid var(--orange);
+  }
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .logo-badge {
+    background: var(--orange);
+    color: #fff;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+  }
+  .logo-text {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .header-meta {
+    color: #8A9BB5;
+    font-size: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    background: var(--navy);
+    padding: 3.5rem 2rem 3rem;
+    text-align: center;
+  }
+  .hero-inner { max-width: 700px; margin: 0 auto; }
+  .hero-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--orange);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .hero h1 {
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 1rem;
+  }
+  .hero h1 span { color: var(--orange); }
+  .hero-desc {
+    color: #8A9BB5;
+    font-size: 15px;
+    max-width: 520px;
+    margin: 0 auto 2rem;
+    line-height: 1.7;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .stat {
+    text-align: center;
+  }
+  .stat-num {
+    font-size: 28px;
+    font-weight: 600;
+    color: #fff;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .stat-label {
+    font-size: 11px;
+    color: #8A9BB5;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* ── Main ── */
+  .main { max-width: 1100px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+
+  /* ── Filters ── */
+  .filter-section { margin-bottom: 2rem; }
+  .filter-label {
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+  .filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    font-size: 12px;
+    font-family: 'Sora', sans-serif;
+    padding: 6px 16px;
+    border: 1.5px solid var(--border-strong);
+    border-radius: 20px;
+    cursor: pointer;
+    background: var(--card-bg);
+    color: var(--text-muted);
+    transition: all 0.15s;
+    font-weight: 500;
+  }
+  .filter-btn:hover { border-color: var(--orange); color: var(--orange); }
+  .filter-btn.active {
+    background: var(--orange);
+    color: #fff;
+    border-color: var(--orange);
+  }
+
+  /* ── Lab Grid ── */
+  .labs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.25rem;
+  }
+
+  /* ── Lab Card ── */
+  .lab-card {
+    background: var(--card-bg);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+  }
+  .lab-card:hover {
+    border-color: var(--orange-mid);
+    box-shadow: 0 4px 20px rgba(255,107,43,0.08);
+    transform: translateY(-1px);
+  }
+  .lab-card.open {
+    border-color: var(--orange);
+    box-shadow: 0 4px 24px rgba(255,107,43,0.12);
+  }
+
+  .card-header {
+    padding: 1.1rem 1.25rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .service-badge {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .card-meta { flex: 1; min-width: 0; }
+  .lab-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    line-height: 1.35;
+    color: var(--text);
+  }
+  .lab-sub {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .svc-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    background: var(--navy);
+    color: var(--orange);
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.04em;
+  }
+  .diff-badge {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 500;
+  }
+  .diff-easy { background: #E1F5EE; color: #0F6E56; }
+  .diff-medium { background: #FAEEDA; color: #854F0B; }
+  .time-tag {
+    font-size: 11px;
+    color: var(--text-light);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .chevron {
+    font-size: 18px;
+    color: var(--text-light);
+    margin-left: auto;
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: transform 0.25s;
+    line-height: 1;
+  }
+  .lab-card.open .chevron { transform: rotate(180deg); }
+
+  /* ── Card Body ── */
+  .lab-body {
+    display: none;
+    border-top: 1.5px solid var(--border);
+  }
+  .lab-card.open .lab-body { display: block; }
+
+  .body-inner { padding: 1.25rem; }
+
+  .tags-row { margin-bottom: 12px; }
+  .tag-pill {
+    display: inline-block;
+    font-size: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    padding: 2px 9px;
+    border-radius: 10px;
+    margin-right: 5px;
+    margin-bottom: 4px;
+    background: var(--bg);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+
+  .objective-box {
+    background: var(--orange-light);
+    border-left: 3px solid var(--orange);
+    border-radius: 0 8px 8px 0;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--red);
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+  }
+  .objective-box strong { color: var(--orange); }
+
+  .section-label {
+    font-size: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+  }
+
+  .steps-list { list-style: none; }
+  .step-item {
+    display: flex;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .step-item:last-child { border-bottom: none; }
+  .step-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--navy);
+    color: var(--orange);
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .step-text {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .step-text code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    background: var(--navy);
+    color: #7DD3A8;
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+  .step-text b { font-weight: 600; color: var(--text); }
+  .step-text i { font-style: italic; }
+
+  /* ── Solution ── */
+  .solution-section { margin-top: 1.25rem; }
+  .solution-toggle {
+    width: 100%;
+    text-align: left;
+    font-size: 13px;
+    font-family: 'Sora', sans-serif;
+    font-weight: 500;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border-strong);
+    border-radius: 8px;
+    background: transparent;
+    cursor: pointer;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s;
+  }
+  .solution-toggle:hover {
+    border-color: var(--green);
+    color: var(--green);
+    background: var(--green-light);
+  }
+  .solution-toggle.revealed {
+    border-color: var(--green);
+    background: var(--green-light);
+    color: #0F6E56;
+  }
+  .toggle-icon { font-size: 16px; }
+  .solution-content {
+    display: none;
+    margin-top: 10px;
+    border: 1.5px solid #9FE1CB;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .solution-content.show { display: block; }
+  .solution-header {
+    background: var(--green);
+    padding: 8px 14px;
+    font-size: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .solution-body { padding: 12px 14px; background: #fff; }
+  .sol-item {
+    display: flex;
+    gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--green-light);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text);
+  }
+  .sol-item:last-child { border-bottom: none; }
+  .sol-check { color: var(--green); flex-shrink: 0; margin-top: 2px; font-size: 14px; }
+  .sol-item code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    background: var(--navy);
+    color: #7DD3A8;
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+  .sol-item b { font-weight: 600; }
+
+  /* ── No results ── */
+  .no-results {
+    text-align: center;
+    padding: 4rem;
+    color: var(--text-muted);
+    font-size: 14px;
+    grid-column: 1/-1;
+  }
+
+  /* ── Progress bar (fun detail) ── */
+  .progress-bar-wrap {
+    background: var(--border);
+    border-radius: 10px;
+    height: 4px;
+    margin-top: 10px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--orange);
+    border-radius: 10px;
+    transition: width 0.4s;
+  }
+
+  /* ── Footer ── */
+  footer {
+    background: var(--navy);
+    color: #8A9BB5;
+    text-align: center;
+    padding: 2rem;
+    font-size: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    margin-top: 2rem;
+  }
+  footer span { color: var(--orange); }
+
+  @media (max-width: 600px) {
+    .hero { padding: 2.5rem 1.25rem 2rem; }
+    .main { padding: 1.5rem 1rem 3rem; }
+    .labs-grid { grid-template-columns: 1fr; }
+    .hero-stats { gap: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="logo" href="#">
+      <span class="logo-badge">AWS</span>
+      <span class="logo-text">Foundation Labs</span>
+    </a>
+    <div class="header-meta">SAA-C03 Prep · 10 Labs</div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Hands-on Student Projects</div>
+    <h1>Learn AWS by <span>Building</span> on AWS</h1>
+    <p class="hero-desc">10 bite-sized labs covering core foundation services. Follow the steps, figure it out, then reveal the solution when ready.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">10</div><div class="stat-label">Labs</div></div>
+      <div class="stat"><div class="stat-num">6</div><div class="stat-label">Services</div></div>
+      <div class="stat"><div class="stat-num">~4h</div><div class="stat-label">Total time</div></div>
+      <div class="stat"><div class="stat-num">0$</div><div class="stat-label">Free tier</div></div>
+    </div>
+  </div>
+</section>
+
+<main class="main">
+
+  <div class="filter-section">
+    <div class="filter-label">Filter by service or level</div>
+    <div class="filters">
+      <button class="filter-btn active" onclick="filter('all',this)">All labs</button>
+      <button class="filter-btn" onclick="filter('EC2',this)">EC2</button>
+      <button class="filter-btn" onclick="filter('S3',this)">S3</button>
+      <button class="filter-btn" onclick="filter('IAM',this)">IAM</button>
+      <button class="filter-btn" onclick="filter('VPC',this)">VPC</button>
+      <button class="filter-btn" onclick="filter('RDS',this)">RDS</button>
+      <button class="filter-btn" onclick="filter('Lambda',this)">Lambda</button>
+      <button class="filter-btn" onclick="filter('easy',this)">🟢 Beginner</button>
+      <button class="filter-btn" onclick="filter('medium',this)">🟡 Intermediate</button>
+    </div>
+  </div>
+
+  <div class="labs-grid" id="labsGrid"></div>
+
+</main>
+
+<footer>
+  <div>AWS Foundation Labs · Created for <span>SAA-C03</span> students</div>
+  <div style="margin-top:6px;font-size:11px;color:#5A6878">Use AWS Free Tier · Always delete resources after labs</div>
+</footer>
+
+<script>
+const labs=[
+{id:1,service:"EC2",icon:"🖥️",color:"background:#E6F1FB;color:#185FA5",title:"Launch your first web server",diff:"easy",tags:["EC2","SSH","Security Groups","Apache"],time:"20 min",
+objective:"Launch a Linux EC2 instance and install a simple Apache web server visible from your browser.",
+steps:[
+"Sign in to the AWS Management Console and navigate to <b>EC2</b>.",
+"Click <b>Launch Instance</b>. Name it <code>my-web-server</code>.",
+"Select <b>Amazon Linux 2023</b> as the AMI and choose <code>t2.micro</code> (free tier eligible).",
+"Under Key pair, click <b>Create new key pair</b> → name it <code>lab-key</code> → download the <code>.pem</code> file and keep it safe.",
+"Under Network settings, allow <b>SSH (port 22)</b> from My IP, and <b>HTTP (port 80)</b> from Anywhere (0.0.0.0/0).",
+"In Advanced details → User data, paste: <code>#!/bin/bash</code> then on new lines: <code>yum install -y httpd</code>, <code>echo 'Hello AWS!' > /var/www/html/index.html</code>, <code>systemctl start httpd</code>, <code>systemctl enable httpd</code>",
+"Click <b>Launch Instance</b> and wait for Instance State = <b>Running</b> (about 1-2 minutes).",
+"Copy the <b>Public IPv4 address</b> from the instance details and paste it into your browser. Can you see 'Hello AWS!'?"
+],
+solution:[
+"The User Data script runs on first boot as root — it installs Apache, writes an HTML page, and starts the web service automatically.",
+"Security Group must have port 80 (HTTP) open to 0.0.0.0/0 for any browser to reach the page — this is the 'virtual firewall' for your instance.",
+"Troubleshooting: if page doesn't load, check (1) instance State is Running, (2) SG inbound rule for port 80 exists, (3) wait 60–90 seconds for User Data script to finish running.",
+"SSH into the instance to verify: <code>ssh -i lab-key.pem ec2-user@YOUR-PUBLIC-IP</code> then run <code>curl localhost</code> — you should see 'Hello AWS!' in the terminal.",
+"Key concept: EC2 is IaaS (Infrastructure as a Service) — you manage the OS, patches, and software. AWS only manages the physical hardware."
+]},
+
+{id:2,service:"S3",icon:"🪣",color:"background:#EAF3DE;color:#3B6D11",title:"Host a static website on S3",diff:"easy",tags:["S3","Static Website","Bucket Policy","Public Access"],time:"25 min",
+objective:"Create an S3 bucket, upload an HTML file, and serve it as a publicly accessible static website — no server needed.",
+steps:[
+"Go to <b>S3</b> in the console. Click <b>Create bucket</b>.",
+"Name it something globally unique like <code>yourname-aws-lab-2024</code>. Choose your nearest region.",
+"Under <b>Block Public Access settings</b>, uncheck 'Block all public access' and confirm the warning checkbox.",
+"After creation, go to the bucket → <b>Properties</b> tab → scroll to <b>Static website hosting</b> → Enable it. Set Index document: <code>index.html</code>.",
+"Locally create a file named <code>index.html</code> with content: <code>&lt;h1&gt;My S3 Website&lt;/h1&gt;&lt;p&gt;Hosted on AWS!&lt;/p&gt;</code>",
+"Go to the <b>Objects</b> tab → <b>Upload</b> that file to the bucket.",
+"Go to <b>Permissions</b> tab → <b>Bucket policy</b> → Edit → paste the public read policy (see solution for the exact JSON).",
+"Copy the <b>Website endpoint URL</b> from the Properties tab and open it in your browser. What do you see?"
+],
+solution:[
+"Bucket Policy to paste (replace YOUR-BUCKET-NAME with your actual bucket name): <code>{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":\"*\",\"Action\":\"s3:GetObject\",\"Resource\":\"arn:aws:s3:::YOUR-BUCKET-NAME/*\"}]}</code>",
+"Bucket names must be globally unique across ALL AWS accounts worldwide — this is why you add your name/date.",
+"403 Forbidden error fix: verify (1) Block Public Access is fully disabled, (2) bucket policy is saved without typos, (3) you're opening the <b>Website endpoint</b> URL, not the S3 object URL.",
+"Website endpoint format: <code>http://BUCKET-NAME.s3-website-REGION.amazonaws.com</code>",
+"S3 static hosting is ideal for portfolios, documentation, and single-page apps — extremely cheap (fractions of a cent per GB) and infinitely scalable.",
+"Key concept: S3 is Object Storage — flat storage with no folder hierarchy. What looks like folders are just prefixes in object key names."
+]},
+
+{id:3,service:"IAM",icon:"🔐",color:"background:#FAEEDA;color:#854F0B",title:"Create a least-privilege IAM user",diff:"easy",tags:["IAM","Users","Policies","MFA"],time:"20 min",
+objective:"Create an IAM user with read-only S3 access, attach a managed policy, then test what happens when they try forbidden actions.",
+steps:[
+"Go to <b>IAM</b> → <b>Users</b> → <b>Create user</b>. Name: <code>s3-readonly-student</code>.",
+"Enable <b>Console access</b> and set a custom password. Uncheck 'must create new password at next sign-in' for simplicity.",
+"On the permissions step, choose <b>Attach policies directly</b>.",
+"Search for and attach the AWS managed policy: <code>AmazonS3ReadOnlyAccess</code>.",
+"Finish creating the user. Copy/note the <b>Console sign-in URL</b> shown at the top of the IAM page.",
+"Open a <b>private/incognito browser window</b>. Sign in with the new user credentials.",
+"Navigate to S3 — verify you can LIST buckets and VIEW objects inside them.",
+"Try to <b>DELETE an object</b> or <b>CREATE a new bucket</b>. Record the exact error message that appears.",
+"Back in your admin session, go to IAM → Policies → AmazonS3ReadOnlyAccess → <b>JSON tab</b>. Read what actions it permits."
+],
+solution:[
+"The user sees 'Access Denied' when attempting delete or create — this confirms least-privilege is working correctly.",
+"AmazonS3ReadOnlyAccess allows only: <code>s3:Get*</code>, <code>s3:List*</code>, and <code>s3:Describe*</code> — no write, create, or delete actions are included.",
+"This demonstrates the Principle of Least Privilege: every user/service gets only the minimum permissions required for their specific job.",
+"Bonus challenge: enable MFA — go to IAM → Users → this user → Security credentials tab → Assign MFA device (use Google Authenticator or Authy).",
+"Never use the root account for daily tasks. Root has unlimited, unrestricted access and cannot be limited by any IAM policy.",
+"Exam tip: IAM is global (not region-specific). Policies are JSON documents with Effect, Action, and Resource."
+]},
+
+{id:4,service:"VPC",icon:"🌐",color:"background:#EEEDFE;color:#534AB7",title:"Build a custom VPC with public & private subnets",diff:"medium",tags:["VPC","Subnets","IGW","Route Table"],time:"35 min",
+objective:"Create a VPC from scratch with one public subnet (internet-accessible) and one private subnet (isolated), and understand what makes a subnet 'public'.",
+steps:[
+"Go to <b>VPC</b> → <b>Create VPC</b>. Choose <b>VPC only</b>. CIDR block: <code>10.0.0.0/16</code>. Name: <code>lab-vpc</code>.",
+"Go to <b>Subnets</b> → Create subnet inside <code>lab-vpc</code>. Name: <code>public-subnet</code>, CIDR: <code>10.0.1.0/24</code>. Pick any AZ.",
+"Create a second subnet. Name: <code>private-subnet</code>, CIDR: <code>10.0.2.0/24</code>. Same or different AZ.",
+"Go to <b>Internet Gateways</b> → Create one named <code>lab-igw</code>. Then <b>Attach it to</b> <code>lab-vpc</code>.",
+"Go to <b>Route Tables</b> → Find the route table associated with your VPC → Rename it <code>public-rt</code>.",
+"Click <code>public-rt</code> → <b>Routes</b> tab → <b>Edit routes</b> → Add route: Destination <code>0.0.0.0/0</code>, Target: <code>lab-igw</code>. Save.",
+"In <code>public-rt</code> → <b>Subnet Associations</b> → Edit → Associate <code>public-subnet</code>.",
+"<b>Do NOT</b> associate private-subnet with this route table — leave it on the main route table (no IGW route).",
+"Launch an EC2 instance into <code>public-subnet</code>. Enable <b>Auto-assign public IP</b>. Can you SSH into it from the internet?"
+],
+solution:[
+"What makes a subnet 'public': its route table has a route <code>0.0.0.0/0 → Internet Gateway</code>. That's it — nothing else.",
+"The Internet Gateway is attached at the VPC level, not at the subnet level. The route table is what grants or denies internet access.",
+"Private subnet has no IGW route — instances in it cannot initiate or receive connections from the internet.",
+"For private subnet instances to reach the internet (e.g. for yum updates), add a NAT Gateway in the public subnet, then route <code>0.0.0.0/0 → NAT GW</code> in the private route table.",
+"Auto-assign public IP must be enabled — without it, even a public subnet instance only gets a private IP and can't be reached from outside.",
+"Exam tip: CIDR /16 gives 65,536 IPs. /24 gives 256 IPs (AWS reserves 5 per subnet, so 251 usable). Never use overlapping CIDRs."
+]},
+
+{id:5,service:"S3",icon:"🪣",color:"background:#EAF3DE;color:#3B6D11",title:"S3 versioning & lifecycle rules",diff:"medium",tags:["S3","Versioning","Lifecycle","Cost Optimization"],time:"30 min",
+objective:"Enable S3 versioning to protect files from accidental deletion, then automate cost savings with a lifecycle rule.",
+steps:[
+"Open your existing S3 bucket (or create a new one for this lab).",
+"Go to <b>Properties</b> tab → <b>Bucket Versioning</b> → <b>Enable</b> it. This cannot be fully undone.",
+"Upload a file named <code>report.txt</code> with content <code>Version 1</code> (create it locally in Notepad/TextEdit).",
+"Upload the <b>same filename</b> (<code>report.txt</code>) again but with content <code>Version 2</code> — S3 will keep both.",
+"In the Objects tab, click <b>Show versions</b> toggle. You should see two entries with different Version IDs.",
+"Delete <code>report.txt</code> (without specifying a version). Notice a <b>Delete Marker</b> appears — the file is not truly gone.",
+"Restore it: with Show versions ON, select and delete <b>only the Delete Marker</b>. The file reappears.",
+"Now go to <b>Management</b> tab → <b>Lifecycle rules</b> → <b>Create lifecycle rule</b>.",
+"Name: <code>archive-old-versions</code>. Scope: All objects. Add action: <b>Transition noncurrent versions</b> to S3 Standard-IA after <b>30 days</b>. Create rule."
+],
+solution:[
+"Versioning stores every version of every object — it's your safety net against accidental overwrites AND deletions.",
+"A normal delete (without Version ID) just adds a Delete Marker — the previous versions are completely intact underneath.",
+"To permanently delete a specific version: select it with 'Show versions' ON and delete that exact Version ID.",
+"S3 Standard-IA (Infrequent Access) is ~58% cheaper for storage vs Standard, but charges a retrieval fee — ideal for old file versions you rarely access.",
+"Lifecycle rules automate cost optimization — AWS automatically moves/deletes objects based on rules you define, no manual work.",
+"Exam tip: Versioning cannot be fully disabled once enabled. It can only be <b>Suspended</b> — new versions stop being created, but all old versions remain."
+]},
+
+{id:6,service:"IAM",icon:"🔐",color:"background:#FAEEDA;color:#854F0B",title:"IAM roles for EC2 — no hardcoded keys",diff:"medium",tags:["IAM","Roles","Instance Profile","Best Practice"],time:"25 min",
+objective:"Attach an IAM Role to an EC2 instance so it can securely access S3 without using any access keys — the production-correct approach.",
+steps:[
+"Go to <b>IAM</b> → <b>Roles</b> → <b>Create role</b>.",
+"Trusted entity type: <b>AWS service</b>. Use case: <b>EC2</b>. Click Next.",
+"Attach permission policy: <code>AmazonS3ReadOnlyAccess</code>. Click Next.",
+"Role name: <code>ec2-s3-reader-role</code>. Create the role.",
+"Go to <b>EC2</b> → select your running instance → <b>Actions</b> → <b>Security</b> → <b>Modify IAM role</b>.",
+"Select <code>ec2-s3-reader-role</code> and click <b>Update IAM role</b>.",
+"<b>SSH into the instance</b>. Run: <code>aws s3 ls</code>. Do you see your buckets listed?",
+"Run: <code>aws s3 cp s3://YOUR-BUCKET-NAME/report.txt .</code> — does it download?",
+"Now try: <code>aws s3 mb s3://test-bucket-deleteme-999</code>. What error do you see and why?"
+],
+solution:[
+"<code>aws s3 ls</code> works (List is allowed). <code>aws s3 mb</code> fails with 'Access Denied' — creating buckets is not in the ReadOnly policy.",
+"The EC2 instance fetches temporary credentials automatically from the Instance Metadata Service (IMDS) at <code>169.254.169.254</code> — no keys needed in code.",
+"NEVER put AWS access keys inside an EC2 instance. If the instance is compromised, attackers get your keys. Roles use auto-rotating short-lived credentials (~1 hour TTL).",
+"This pattern works the same for Lambda, ECS, EKS, and other AWS services — always use roles, never hardcode keys.",
+"The AWS CLI inside EC2 automatically picks up role credentials — no <code>aws configure</code> needed.",
+"Exam tip: IAM Roles can be attached to EC2 at launch OR after launch (as you just did). Roles are the #1 best practice for service-to-service access."
+]},
+
+{id:7,service:"RDS",icon:"🗄️",color:"background:#FAECE7;color:#993C1D",title:"Launch a MySQL RDS instance (free tier)",diff:"medium",tags:["RDS","MySQL","Security Groups","Free Tier"],time:"30 min",
+objective:"Deploy a managed MySQL database in a private subnet and connect to it from an EC2 instance — as you would in a real 2-tier application.",
+steps:[
+"Go to <b>RDS</b> → <b>Create database</b>. Standard create → <b>MySQL</b> engine.",
+"Template: <b>Free tier</b>. DB instance identifier: <code>lab-mysql</code>.",
+"Master username: <code>admin</code>. Set and note down a strong master password.",
+"Instance configuration: <code>db.t3.micro</code>. Storage: 20 GiB gp2 SSD.",
+"Under Connectivity: VPC = <code>lab-vpc</code>. Create a new DB Subnet Group using your private subnets.",
+"<b>Public access: No</b>. This is critical — databases must never be internet-accessible.",
+"VPC Security Group: create new, name it <code>rds-sg</code>. After creation, edit its inbound rules to allow <b>MySQL/Aurora (port 3306)</b> from your EC2 security group ID.",
+"Click <b>Create database</b> and wait 5–7 minutes for Status = Available.",
+"SSH into your EC2 instance. Install MySQL client: <code>sudo yum install -y mysql</code>. Connect: <code>mysql -h RDS-ENDPOINT -u admin -p</code>"
+],
+solution:[
+"RDS Endpoint format: <code>lab-mysql.xxxxxxxxx.REGION.rds.amazonaws.com</code> — find it in RDS console under the database's Connectivity & security tab.",
+"Public Access = No is correct and required. Databases should only be reachable from within your VPC, not from the internet.",
+"The RDS security group inbound rule should reference your EC2 security group ID (not 0.0.0.0/0) — this is security group chaining.",
+"Connection timeout troubleshooting: (1) Are EC2 and RDS in the same VPC? (2) Does RDS SG allow port 3306 from EC2 SG? (3) Is the endpoint correct?",
+"<b>Important:</b> Free tier gives 750 hours/month of db.t3.micro. <b>Delete the database when done</b> to avoid unexpected charges — RDS costs accumulate even when idle.",
+"RDS advantage: AWS handles backups, patching, failover, and replication automatically — you focus on your data, not the database engine."
+]},
+
+{id:8,service:"Lambda",icon:"⚡",color:"background:#FBEAF0;color:#993556",title:"Serverless hello world with Lambda",diff:"easy",tags:["Lambda","Serverless","Python","CloudWatch"],time:"20 min",
+objective:"Write a Python Lambda function, invoke it with a custom event, and understand the serverless billing model.",
+steps:[
+"Go to <b>Lambda</b> → <b>Create function</b>. Choose <b>Author from scratch</b>.",
+"Function name: <code>hello-lambda</code>. Runtime: <b>Python 3.12</b>.",
+"Execution role: <b>Create a new role with basic Lambda permissions</b> (allows CloudWatch logging).",
+"Click <b>Create function</b>.",
+"In the code editor, replace everything with:<br><code>import json</code><br><code>def lambda_handler(event, context):</code><br>&nbsp;&nbsp;&nbsp;&nbsp;<code>name = event.get('name', 'World')</code><br>&nbsp;&nbsp;&nbsp;&nbsp;<code>return {'statusCode': 200, 'body': json.dumps(f'Hello, {name}!')}</code>",
+"Click <b>Deploy</b> to save your function.",
+"Click <b>Test</b> → <b>Create new test event</b>. Name: <code>test1</code>. Body: <code>{\"name\": \"AWS Student\"}</code>. Save and Run.",
+"Examine the <b>Response</b> output and the <b>Log output</b> (showing duration and memory used).",
+"Change the test event body to <code>{}</code> (empty) and run again. What name appears in the response this time and why?"
+],
+solution:[
+"When <code>name</code> key is absent, <code>event.get('name', 'World')</code> returns the default value <code>'World'</code> — Python dict's safe get with fallback.",
+"Lambda billing: you pay only for actual execution time in milliseconds + number of requests. Zero cost when not running — unlike EC2 which runs 24/7.",
+"Free tier: 1 million requests/month + 400,000 GB-seconds of compute per month — this hello world function is essentially free forever.",
+"The <code>context</code> object provides runtime info: function name, memory limit, AWS request ID, and remaining execution time in milliseconds.",
+"Logs go to <b>CloudWatch Logs</b> automatically — navigate to CloudWatch → Log groups → <code>/aws/lambda/hello-lambda</code> to see full logs.",
+"The execution role gives Lambda permission to write logs to CloudWatch. Without it, invocations would succeed but produce no logs.",
+"Exam tip: Lambda max timeout is 15 minutes. Max memory is 10,240 MB. CPU scales proportionally with memory — need more CPU? Increase memory."
+]},
+
+{id:9,service:"EC2",icon:"🖥️",color:"background:#E6F1FB;color:#185FA5",title:"Attach & resize an EBS volume",diff:"medium",tags:["EC2","EBS","Storage","Linux","gp3"],time:"25 min",
+objective:"Create an EBS volume, attach it to a running instance, mount it, write data to it, then expand it online without any downtime.",
+steps:[
+"In EC2 console → <b>Elastic Block Store</b> → <b>Volumes</b> → <b>Create volume</b>.",
+"Type: <code>gp3</code>. Size: <b>5 GiB</b>. <b>Availability Zone: must exactly match your EC2 instance's AZ</b> (check instance details).",
+"Create the volume. Select it → <b>Actions</b> → <b>Attach volume</b> → choose your instance → Attach.",
+"SSH into the instance. Run <code>lsblk</code> — spot the new unformatted disk (likely <code>/dev/xvdf</code> or <code>/dev/nvme1n1</code>).",
+"Format it: <code>sudo mkfs.ext4 /dev/xvdf</code> (replace xvdf with your actual device name).",
+"Create a mount point and mount: <code>sudo mkdir /data && sudo mount /dev/xvdf /data</code>",
+"Write a file: <code>echo 'AWS EBS Lab' | sudo tee /data/test.txt</code>. Run <code>df -h</code> to confirm 5GB volume is mounted.",
+"In the console, select the volume → <b>Actions</b> → <b>Modify volume</b> → change size to <b>8 GiB</b>. Confirm.",
+"Back in SSH (no reboot needed): <code>sudo growpart /dev/xvdf 1</code> then <code>sudo resize2fs /dev/xvdf</code>. Run <code>df -h</code> again — size updated!"
+],
+solution:[
+"EBS volumes are AZ-locked — a volume in us-east-1a can ONLY attach to an instance also in us-east-1a. This is the most common mistake in this lab.",
+"<code>lsblk</code> lists all block devices. <code>df -h</code> shows only mounted filesystems. Run both to understand storage layout.",
+"<code>mkfs.ext4</code> formats the raw block device — only do this ONCE on a new volume. Formatting again erases all data permanently.",
+"Auto-mount after reboot: add this line to <code>/etc/fstab</code>: <code>/dev/xvdf  /data  ext4  defaults  0  0</code>",
+"EBS volumes can be expanded while attached and in use — zero downtime for resize. However, you cannot shrink a volume.",
+"<b>gp3 vs gp2:</b> gp3 is newer, cheaper (~20%), and lets you independently tune IOPS and throughput. gp3 is the recommended default for most workloads."
+]},
+
+{id:10,service:"VPC",icon:"🌐",color:"background:#EEEDFE;color:#534AB7",title:"Security groups vs NACLs — spot the difference",diff:"medium",tags:["VPC","Security Groups","NACL","Stateful","Stateless"],time:"25 min",
+objective:"Observe and prove the difference between stateful Security Groups and stateless NACLs through live testing on your EC2 instance.",
+steps:[
+"Make sure your EC2 web server from Lab 1 is running and accessible in the browser.",
+"Go to VPC → <b>Network ACLs</b> → select the NACL associated with your public subnet.",
+"In <b>Inbound rules</b> → Edit → Add rule: Rule #: <code>90</code>, Type: HTTP (80), Action: <b>DENY</b>. Save.",
+"Try to open the web server in your browser. What happens? (Lower rule number = higher priority, so rule 90 beats any Allow at 100+)",
+"Remove the NACL DENY rule. Confirm the web server is accessible again.",
+"Now go to the EC2 instance's <b>Security Group</b> → <b>Inbound rules</b> → Edit → Remove the HTTP port 80 rule. Save.",
+"Try the browser again. What happens now?",
+"Add the port 80 inbound rule back to the Security Group. Confirm it works.",
+"<b>Final test:</b> In the NACL, add an <b>Outbound</b> DENY rule for port 80. Does the web server respond? Explain why or why not."
+],
+solution:[
+"NACL blocks inbound port 80 (step 3): browser shows timeout. The packet never even reaches the instance — blocked at the subnet boundary.",
+"SG removes port 80 (step 6): browser also shows timeout. Request passes the NACL but is blocked by the Security Group at the instance level.",
+"Final test (outbound NACL DENY port 80): browser times out. The REQUEST arrives (inbound NACL and SG allow it) but the RESPONSE is blocked by the outbound NACL DENY.",
+"This proves NACLs are STATELESS — they evaluate inbound and outbound separately. You must explicitly allow both directions.",
+"Security Groups are STATEFUL — allowing inbound HTTP automatically allows the return traffic outbound. No outbound SG rule needed for responses.",
+"Evaluation order: Traffic hits NACL first (subnet level), then Security Group (instance level). Both must allow traffic for it to reach the instance.",
+"Exam memory trick: <b>NACL = Stateless, Subnet-level, Numbered rules, Allow+Deny</b>. <b>SG = Stateful, Instance-level, No number, Allow only</b>."
+]}
+];
+
+function renderLabs(items){
+  const grid=document.getElementById('labsGrid');
+  if(items.length===0){
+    grid.innerHTML='<div class="no-results">No labs match this filter. Try a different category.</div>';
+    return;
+  }
+  grid.innerHTML=items.map(lab=>`
+    <div class="lab-card" id="card-${lab.id}">
+      <div class="card-header" onclick="toggle(${lab.id})">
+        <div class="service-badge" style="${lab.color}">${lab.icon}</div>
+        <div class="card-meta">
+          <div class="lab-title">Lab ${lab.id}: ${lab.title}</div>
+          <div class="lab-sub">
+            <span class="svc-tag">${lab.service}</span>
+            <span class="diff-badge diff-${lab.diff}">${lab.diff==='easy'?'Beginner':'Intermediate'}</span>
+            <span class="time-tag">${lab.time}</span>
+          </div>
+        </div>
+        <div class="chevron">⌄</div>
+      </div>
+      <div class="lab-body" id="body-${lab.id}">
+        <div class="body-inner">
+          <div class="tags-row">${lab.tags.map(t=>`<span class="tag-pill">${t}</span>`).join('')}</div>
+          <div class="objective-box"><strong>🎯 Objective:</strong> ${lab.objective}</div>
+          <div class="section-label">Step-by-step tasks</div>
+          <ol class="steps-list">
+            ${lab.steps.map((s,i)=>`<li class="step-item"><span class="step-num">${i+1}</span><span class="step-text">${s}</span></li>`).join('')}
+          </ol>
+          <div class="solution-section">
+            <button class="solution-toggle" id="stoggle-${lab.id}" onclick="toggleSolution(${lab.id})">
+              <span class="toggle-icon">🔓</span> Reveal solution & key concepts
+            </button>
+            <div class="solution-content" id="sol-${lab.id}">
+              <div class="solution-header">✅ Solution & Explanations</div>
+              <div class="solution-body">
+                ${lab.solution.map(s=>`<div class="sol-item"><span class="sol-check">✓</span><span>${s}</span></div>`).join('')}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggle(id){
+  const card=document.getElementById('card-'+id);
+  const body=document.getElementById('body-'+id);
+  const isOpen=card.classList.contains('open');
+  document.querySelectorAll('.lab-card').forEach(c=>c.classList.remove('open'));
+  document.querySelectorAll('.lab-body').forEach(b=>b.style.display='none');
+  if(!isOpen){card.classList.add('open');body.style.display='block';}
+}
+
+function toggleSolution(id){
+  const sol=document.getElementById('sol-'+id);
+  const btn=document.getElementById('stoggle-'+id);
+  sol.classList.toggle('show');
+  btn.classList.toggle('revealed');
+  btn.querySelector('.toggle-icon').textContent=sol.classList.contains('show')?'🔒':'🔓';
+}
+
+function filter(val,btn){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.lab-card').forEach(c=>c.classList.remove('open'));
+  document.querySelectorAll('.lab-body').forEach(b=>b.style.display='none');
+  if(val==='all'){renderLabs(labs);return;}
+  renderLabs(labs.filter(l=>l.service===val||l.diff===val||l.tags.includes(val)));
+}
+
+renderLabs(labs);
+</script>
+</body>
+</html>
